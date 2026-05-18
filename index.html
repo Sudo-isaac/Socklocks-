@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sock Locks – Never Lose Another Sock Again</title>
+  <meta name="description" content="Sock Locks keep your socks together through washing, drying, and storage. Reusable, durable, and dryer-safe." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS VARIABLES & RESET
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:    #2563eb;
+      --primary-dk: #1e40af;
+      --accent:     #f59e0b;
+      --accent-dk:  #d97706;
+      --text:       #0f172a;
+      --muted:      #475569;
+      --light:      #f8fafc;
+      --border:     #e2e8f0;
+      --white:      #ffffff;
+      --card-bg:    #ffffff;
+      --hero-grad:  linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+      --radius-sm:  8px;
+      --radius-md:  14px;
+      --radius-lg:  20px;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:  0 4px 16px rgba(0,0,0,.10);
+      --shadow-lg:  0 10px 40px rgba(0,0,0,.12);
+      --transition: 220ms ease;
+      --font-head:  'Rubik', sans-serif;
+      --font-body:  'Nunito Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--light);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    .container {
+      max-width: 1120px;
+      margin-inline: auto;
+      padding-inline: 24px;
+    }
+
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-head);
+      font-weight: 600;
+      font-size: .97rem;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover {
+      background: var(--accent-dk);
+      border-color: var(--accent-dk);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(245,158,11,.40);
+    }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,.6);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,.15);
+      border-color: #fff;
+    }
+    .btn-blue {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn-blue:hover {
+      background: var(--primary-dk);
+      border-color: var(--primary-dk);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37,99,235,.35);
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin-inline: auto;
+      line-height: 1.7;
+    }
+    .text-center { text-align: center; }
+    .section { padding: 96px 0; }
+    .section-alt { background: var(--white); }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow var(--transition);
+    }
+    #navbar.scrolled {
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -.5px;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-weight: 600;
+      font-size: .92rem;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta { margin-left: 8px; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 6px;
+      cursor: pointer;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px;
+      z-index: 49;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: var(--shadow-md);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 12px 0;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      font-size: 1rem;
+    }
+    .mobile-menu a:last-of-type { border-bottom: none; }
+    .mobile-menu .btn { margin-top: 12px; width: 100%; justify-content: center; }
+
+    @media (max-width: 860px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      padding-top: 68px; /* navbar height */
+      background: var(--hero-grad);
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Floating shapes */
+    .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: .12;
+    }
+    .shape-1 { width: 520px; height: 520px; background: #fff; top: -180px; right: -140px; animation: float 8s ease-in-out infinite; }
+    .shape-2 { width: 320px; height: 320px; background: var(--accent); bottom: -100px; left: -80px; animation: float 11s ease-in-out infinite reverse; }
+    .shape-3 { width: 180px; height: 180px; background: #93c5fd; top: 55%; left: 40%; animation: float 6s ease-in-out infinite 2s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-20px) rotate(8deg); }
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 80px 0 100px;
+    }
+    .hero-content { position: relative; z-index: 2; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.2);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: .82rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .05em;
+      margin-bottom: 24px;
+    }
+    .hero-badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(1.4); opacity: .7; }
+    }
+    .hero-headline {
+      font-family: var(--font-head);
+      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.08;
+      color: #fff;
+      margin-bottom: 22px;
+      letter-spacing: -.02em;
+    }
+    .hero-headline span { color: var(--accent); }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,.82);
+      line-height: 1.7;
+      max-width: 460px;
+      margin-bottom: 36px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,.75);
+      font-size: .88rem;
+      font-weight: 600;
+    }
+    .hero-trust-icon {
+      width: 20px; height: 20px;
+      fill: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* CSS Product Illustration */
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .product-scene {
+      position: relative;
+      width: 340px;
+      height: 340px;
+    }
+    .product-glow {
+      position: absolute;
+      inset: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,158,11,.35) 0%, transparent 70%);
+      filter: blur(20px);
+    }
+    .washing-machine {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px; height: 220px;
+      background: linear-gradient(160deg, #dbeafe, #bfdbfe);
+      border-radius: 24px;
+      box-shadow: inset -4px -4px 12px rgba(0,0,0,.12), var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .wm-screen {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      border: 8px solid rgba(255,255,255,.5);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.3), inset 0 4px 12px rgba(0,0,0,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spin 6s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .wm-inner {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sock-icon {
+      width: 40px; height: 40px;
+      position: relative;
+    }
+    /* SVG socks */
+    .sock-svg { width: 100%; height: 100%; }
+    .wm-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .wm-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .wm-dot:nth-child(1) { background: var(--accent); }
+    .wm-dot:nth-child(2) { background: #ef4444; }
+    .wm-dot:nth-child(3) { background: #22c55e; }
+
+    /* Floating clip badges */
+    .clip-badge {
+      position: absolute;
+      background: #fff;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: bob 3s ease-in-out infinite;
+    }
+    .clip-badge-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .clip-badge:nth-child(2) { top: 24px; left: -10px; animation-delay: .5s; }
+    .clip-badge:nth-child(3) { bottom: 40px; left: -30px; animation-delay: 1s; }
+    .clip-badge:nth-child(4) { top: 50px; right: -20px; animation-delay: 1.5s; }
+    @keyframes bob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; padding: 60px 0 80px; text-align: center; }
+      .hero-sub { margin-inline: auto; }
+      .hero-btns { justify-content: center; }
+      .hero-trust { justify-content: center; }
+      .hero-visual { display: none; }
+    }
+
+    /* ============================================================
+       PROBLEM SECTION
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 28px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: default;
+    }
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .stat-icon {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .stat-icon svg { width: 28px; height: 28px; }
+    .stat-number {
+      font-family: var(--font-head);
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .stat-label {
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .stat-desc { font-size: .88rem; color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       SOLUTION / FEATURES
+    ============================================================ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+    }
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+      cursor: default;
+    }
+    .feature-card:hover {
+      box-shadow: 0 8px 32px rgba(37,99,235,.12);
+      transform: translateY(-4px);
+      border-color: rgba(37,99,235,.25);
+    }
+    .feature-icon {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+    .feature-icon svg { width: 30px; height: 30px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .feature-title {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .feature-desc { font-size: .95rem; color: var(--muted); line-height: 1.7; }
+
+    @media (max-width: 720px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 480px) and (max-width: 720px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       HOW IT WORKS
+    ============================================================ */
+    #how { background: linear-gradient(180deg, #f0f9ff 0%, var(--light) 100%); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 64px;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 44px; left: calc(16.6% + 28px); right: calc(16.6% + 28px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+    .step-num {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: #fff;
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(37,99,235,.30);
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+    .step-title {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    .step-desc { font-size: .93rem; color: var(--muted); line-height: 1.65; }
+
+    @media (max-width: 640px) {
+      .steps-grid { grid-template-columns: 1fr; gap: 40px; }
+      .steps-grid::before { display: none; }
+    }
+
+    /* ============================================================
+       PRICING
+    ============================================================ */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+      align-items: start;
+    }
+    .pricing-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: default;
+      position: relative;
+    }
+    .pricing-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .pricing-card.popular {
+      border-color: var(--primary);
+      box-shadow: 0 8px 40px rgba(37,99,235,.18);
+      transform: scale(1.04);
+    }
+    .pricing-card.popular:hover { transform: scale(1.04) translateY(-4px); }
+    .popular-badge {
+      position: absolute;
+      top: -14px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 18px;
+      border-radius: 99px;
+    }
+    .pricing-name {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 20px;
+    }
+    .pricing-amount {
+      font-family: var(--font-head);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .pricing-amount sup { font-size: 1.4rem; font-weight: 700; vertical-align: super; }
+    .pricing-qty {
+      font-size: .88rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin: 10px 0 24px;
+    }
+    .pricing-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 24px; }
+    .pricing-features { margin-bottom: 28px; display: flex; flex-direction: column; gap: 12px; }
+    .pricing-feat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .93rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .pricing-feat svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .pricing-card .btn { width: 100%; justify-content: center; }
+    .pricing-card .btn-primary { background: var(--primary); border-color: var(--primary); }
+    .pricing-card .btn-primary:hover { background: var(--primary-dk); border-color: var(--primary-dk); box-shadow: 0 6px 20px rgba(37,99,235,.35); }
+
+    @media (max-width: 860px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-inline: auto; }
+      .pricing-card.popular { transform: none; }
+      .pricing-card.popular:hover { transform: translateY(-4px); }
+    }
+
+    /* ============================================================
+       INVESTOR SECTION
+    ============================================================ */
+    #investor {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
+      color: #fff;
+    }
+    #investor .section-label { color: var(--accent); }
+    #investor .section-title { color: #fff; }
+    #investor .section-sub { color: rgba(255,255,255,.7); }
+    .investor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    .investor-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      backdrop-filter: blur(8px);
+      transition: background var(--transition), transform var(--transition);
+      cursor: default;
+    }
+    .investor-card:hover {
+      background: rgba(255,255,255,.12);
+      transform: translateY(-3px);
+    }
+    .investor-card-icon {
+      width: 48px; height: 48px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .investor-card-icon svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .investor-card-title {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .investor-card-desc { font-size: .93rem; color: rgba(255,255,255,.68); line-height: 1.7; }
+    .investor-card-highlight {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .investor-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       TESTIMONIALS
+    ============================================================ */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 56px;
+    }
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 26px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: default;
+    }
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .stars { display: flex; gap: 4px; margin-bottom: 18px; }
+    .star { width: 18px; height: 18px; fill: var(--accent); }
+    .testimonial-text {
+      font-size: .97rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 14px; }
+    .author-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .author-name { font-weight: 700; color: var(--text); font-size: .95rem; }
+    .author-role { font-size: .82rem; color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 480px) and (max-width: 720px) {
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ============================================================
+       FAQ ACCORDION
+    ============================================================ */
+    #faq { background: var(--light); }
+    .faq-list {
+      max-width: 720px;
+      margin: 56px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition);
+    }
+    .faq-item:hover { box-shadow: var(--shadow-md); }
+    .faq-question {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 24px;
+      background: none;
+      border: none;
+      text-align: left;
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      gap: 16px;
+      transition: color var(--transition);
+    }
+    .faq-question:hover { color: var(--primary); }
+    .faq-chevron {
+      width: 22px; height: 22px;
+      flex-shrink: 0;
+      color: var(--muted);
+      transition: transform var(--transition);
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-item.open .faq-question { color: var(--primary); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease, padding var(--transition);
+      padding: 0 24px;
+    }
+    .faq-answer-inner {
+      padding-bottom: 22px;
+      font-size: .95rem;
+      color: var(--muted);
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    /* ============================================================
+       CONTACT SECTION
+    ============================================================ */
+    #contact { background: var(--white); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 56px;
+      align-items: start;
+    }
+    .contact-info-title {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .contact-info-desc { color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .contact-detail svg { width: 20px; height: 20px; stroke: var(--primary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: .9rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: .97rem;
+      color: var(--text);
+      background: var(--light);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+      background: #fff;
+    }
+    .form-group textarea { min-height: 120px; }
+    #contact-form .btn { width: 100%; justify-content: center; margin-top: 4px; }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 32px 24px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-md);
+      color: #15803d;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .form-success.show { display: block; }
+
+    @media (max-width: 720px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: #0f172a;
+      color: rgba(255,255,255,.65);
+      padding: 60px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand-name {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    .footer-brand-name span { color: var(--accent); }
+    .footer-desc { font-size: .9rem; line-height: 1.7; max-width: 280px; }
+    .footer-socials { display: flex; gap: 12px; margin-top: 20px; }
+    .social-link {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition);
+      cursor: pointer;
+    }
+    .social-link:hover { background: var(--primary); }
+    .social-link svg { width: 18px; height: 18px; fill: rgba(255,255,255,.7); }
+    .footer-col-title {
+      font-family: var(--font-head);
+      font-size: .9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      font-size: .9rem;
+      color: rgba(255,255,255,.6);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .85rem;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* ============================================================
+       BACK TO TOP BUTTON
+    ============================================================ */
+    #back-top {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,99,235,.4);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity var(--transition), transform var(--transition);
+      z-index: 40;
+    }
+    #back-top.visible { opacity: 1; pointer-events: all; transform: translateY(0); }
+    #back-top:hover { background: var(--primary-dk); transform: translateY(-2px); }
+    #back-top svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION BAR
+  ============================================================ -->
+  <nav id="navbar" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="#hero" class="nav-logo">Sock<span>Locks</span></a>
+      <ul class="nav-links" role="list">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">Solution</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#investor">Investors</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#pricing" class="btn btn-blue nav-cta" style="padding:10px 22px;font-size:.88rem;">Buy Now</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+    <a href="#hero"      class="mobile-link">Home</a>
+    <a href="#problem"   class="mobile-link">Problem</a>
+    <a href="#solution"  class="mobile-link">Solution</a>
+    <a href="#pricing"   class="mobile-link">Pricing</a>
+    <a href="#investor"  class="mobile-link">Investors</a>
+    <a href="#contact"   class="mobile-link">Contact</a>
+    <a href="#pricing" class="btn btn-blue">Buy Now</a>
+  </div>
+
+  <main>
+
+    <!-- ============================================================
+         HERO SECTION
+    ============================================================ -->
+    <section id="hero" aria-label="Hero">
+      <div class="hero-shapes" aria-hidden="true">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+      <div class="container">
+        <div class="hero-grid">
+
+          <div class="hero-content">
+            <div class="hero-badge" aria-label="New product launch">
+              <div class="hero-badge-dot" aria-hidden="true"></div>
+              Introducing Sock Locks
+            </div>
+            <h1 class="hero-headline">Never Lose <span>Another Sock</span> Again</h1>
+            <p class="hero-sub">Sock Locks keep your socks together through washing, drying, and storage — so every pair stays matched, every time.</p>
+            <div class="hero-btns">
+              <a href="#pricing" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Order Now
+              </a>
+              <a href="#how" class="btn btn-outline">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                Watch Demo
+              </a>
+            </div>
+            <div class="hero-trust" role="list" aria-label="Trust indicators">
+              <div class="hero-trust-item" role="listitem">
+                <svg class="hero-trust-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Dryer Safe
+              </div>
+              <div class="hero-trust-item" role="listitem">
+                <svg class="hero-trust-icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Reusable 1000+ Times
+              </div>
+              <div class="hero-trust-item" role="listitem">
+                <svg class="hero-trust-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                Family Friendly
+              </div>
+            </div>
+          </div>
+
+          <!-- CSS Product Visual -->
+          <div class="hero-visual" aria-hidden="true">
+            <div class="product-scene">
+              <div class="product-glow"></div>
+              <div class="washing-machine">
+                <div class="wm-screen">
+                  <div class="wm-inner">
+                    <svg viewBox="0 0 40 40" width="40" height="40" fill="none">
+                      <!-- Sock silhouette SVG -->
+                      <path d="M10 8 Q10 4 14 4 L18 4 Q22 4 22 8 L22 22 L30 28 Q34 32 30 36 Q26 40 22 36 L10 36 Q6 36 6 32 L6 28 L10 28 Z" fill="rgba(255,255,255,0.9)"/>
+                      <path d="M14 4 L18 4" stroke="rgba(37,99,235,0.4)" stroke-width="2"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="wm-dots">
+                  <div class="wm-dot"></div>
+                  <div class="wm-dot"></div>
+                  <div class="wm-dot"></div>
+                </div>
+              </div>
+              <div class="clip-badge">
+                <div class="clip-badge-dot" style="background:#22c55e;"></div>
+                Pairs Locked
+              </div>
+              <div class="clip-badge">
+                <div class="clip-badge-dot" style="background:#3b82f6;"></div>
+                Wash Safe
+              </div>
+              <div class="clip-badge">
+                <div class="clip-badge-dot" style="background:var(--accent);"></div>
+                Zero Lost Socks
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PROBLEM SECTION
+    ============================================================ -->
+    <section id="problem" class="section" aria-labelledby="problem-title">
+      <div class="container text-center">
+        <span class="section-label reveal">The Problem</span>
+        <h2 class="section-title reveal" id="problem-title">The Sock Disappearing Act</h2>
+        <p class="section-sub reveal">It sounds trivial — until you calculate how much time and money the average family wastes every single year on missing socks.</p>
+
+        <div class="stats-grid">
+          <div class="stat-card reveal">
+            <div class="stat-icon" style="background:rgba(239,68,68,.1);" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="stat-number" data-target="3" data-suffix="B+">0</div>
+            <div class="stat-label">Socks Lost Globally Per Year</div>
+            <div class="stat-desc">Billions of socks go missing in the laundry every year worldwide — it's one of the most universally relatable household frustrations.</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon" style="background:rgba(245,158,11,.1);" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="stat-number" data-target="182" data-prefix="$">0</div>
+            <div class="stat-label">Average Family Spend Per Year</div>
+            <div class="stat-desc">Families spend hundreds of dollars annually replacing lost or mismatched socks — money that could be saved with a simple solution.</div>
+          </div>
+          <div class="stat-card reveal">
+            <div class="stat-icon" style="background:rgba(37,99,235,.1);" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="stat-number" data-target="15" data-suffix=" min">0</div>
+            <div class="stat-label">Weekly Sorting Time</div>
+            <div class="stat-desc">The average household wastes 15 minutes every week sorting through unmatched socks — that adds up to over 13 hours a year.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SOLUTION SECTION
+    ============================================================ -->
+    <section id="solution" class="section section-alt" aria-labelledby="solution-title">
+      <div class="container text-center">
+        <span class="section-label reveal">The Solution</span>
+        <h2 class="section-title reveal" id="solution-title">Small Clip. Big Difference.</h2>
+        <p class="section-sub reveal">Sock Locks are the elegantly simple solution to a universal problem. Clip, wash, dry, done.</p>
+
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 2l3 1-2 5 3-1 1 3-4 2 2 5 5-3 1 4h4l1-4 5 3 2-5-4-2 1-3 3 1-2-5 3-1L18 0l-3 2-3-2-3 2z" stroke-width="1.5"/></svg>
+            </div>
+            <h3 class="feature-title">100% Reusable</h3>
+            <p class="feature-desc">Sock Locks are built to last. Clip them thousands of times without any degradation in hold strength. One pack pays for itself within weeks.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3 class="feature-title">Durable TPU Material</h3>
+            <p class="feature-desc">Manufactured from premium Thermoplastic Polyurethane — flexible, heat-resistant, and built to withstand repeated washing and drying cycles.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3 class="feature-title">Works in Wash &amp; Dryer</h3>
+            <p class="feature-desc">Designed specifically to handle full laundry cycles. Safe for temperatures up to 80°C — just clip, load, and forget about sorting forever.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3 class="feature-title">Works for All Sock Types</h3>
+            <p class="feature-desc">From ankle socks to knee-highs, thin dress socks to thick woolly ones — the spring-grip design accommodates all thicknesses and fabric types.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h3 class="feature-title">Saves Time &amp; Money</h3>
+            <p class="feature-desc">Eliminate sock-sorting forever. No more buying replacement socks. What seems like a minor saving adds up to real dollars throughout the year.</p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            </div>
+            <h3 class="feature-title">Eco-Friendly Choice</h3>
+            <p class="feature-desc">Fewer replacement socks means less textile waste. Sock Locks are a small but meaningful step toward a more sustainable household routine.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS
+    ============================================================ -->
+    <section id="how" class="section" aria-labelledby="how-title">
+      <div class="container text-center">
+        <span class="section-label reveal">How It Works</span>
+        <h2 class="section-title reveal" id="how-title">Three Steps to Sock Freedom</h2>
+        <p class="section-sub reveal">It couldn't be simpler. No learning curve. No special instructions. Just clip and go.</p>
+
+        <div class="steps-grid" role="list">
+          <div class="step reveal" role="listitem">
+            <div class="step-num" aria-label="Step 1">1</div>
+            <h3 class="step-title">Clip Your Pair Together</h3>
+            <p class="step-desc">Slide both socks through the Sock Lock clip. The spring-grip holds them securely without stretching or damaging the fabric.</p>
+          </div>
+          <div class="step reveal" role="listitem">
+            <div class="step-num" aria-label="Step 2">2</div>
+            <h3 class="step-title">Wash &amp; Dry as Normal</h3>
+            <p class="step-desc">Toss the clipped pair straight into the washing machine and dryer. The Sock Lock stays on through the full laundry cycle.</p>
+          </div>
+          <div class="step reveal" role="listitem">
+            <div class="step-num" aria-label="Step 3">3</div>
+            <h3 class="step-title">Fold &amp; Store Perfectly Matched</h3>
+            <p class="step-desc">Pull out a perfectly matched pair every time. Remove the clip, store your socks, and you're done — no sorting required.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PRICING SECTION
+    ============================================================ -->
+    <section id="pricing" class="section section-alt" aria-labelledby="pricing-title">
+      <div class="container text-center">
+        <span class="section-label reveal">Pricing</span>
+        <h2 class="section-title reveal" id="pricing-title">Simple, Transparent Pricing</h2>
+        <p class="section-sub reveal">Choose the pack that works for your household. Free shipping on all orders over $30.</p>
+
+        <div class="pricing-grid">
+
+          <!-- Single Pack -->
+          <div class="pricing-card reveal">
+            <div class="pricing-name">Single Pack</div>
+            <div class="pricing-amount"><sup>$</sup>14<span style="font-size:1.8rem">.99</span></div>
+            <div class="pricing-qty">20 Sock Locks included</div>
+            <hr class="pricing-divider"/>
+            <ul class="pricing-features" role="list">
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                20 reusable clips
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Premium TPU material
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Dryer &amp; washer safe
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                1–2 person household
+              </li>
+            </ul>
+            <a href="#contact" class="btn btn-outline" style="border-color:var(--border);color:var(--text);width:100%;justify-content:center;">Order Single</a>
+          </div>
+
+          <!-- Family Pack — Most Popular -->
+          <div class="pricing-card popular reveal" aria-label="Most popular plan">
+            <div class="popular-badge" aria-label="Most popular">Most Popular</div>
+            <div class="pricing-name" style="color:var(--primary);">Family Pack</div>
+            <div class="pricing-amount" style="color:var(--primary);"><sup>$</sup>29<span style="font-size:1.8rem">.99</span></div>
+            <div class="pricing-qty">50 Sock Locks included</div>
+            <hr class="pricing-divider"/>
+            <ul class="pricing-features" role="list">
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                50 reusable clips
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Premium TPU material
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Dryer &amp; washer safe
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Ideal for families of 4
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <strong>Free shipping included</strong>
+              </li>
+            </ul>
+            <a href="#contact" class="btn btn-primary" style="width:100%;justify-content:center;">Order Family Pack</a>
+          </div>
+
+          <!-- Bulk Pack -->
+          <div class="pricing-card reveal">
+            <div class="pricing-name">Bulk Pack</div>
+            <div class="pricing-amount"><sup>$</sup>49<span style="font-size:1.8rem">.99</span></div>
+            <div class="pricing-qty">100 Sock Locks included</div>
+            <hr class="pricing-divider"/>
+            <ul class="pricing-features" role="list">
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                100 reusable clips
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Premium TPU material
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Dryer &amp; washer safe
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Large households &amp; gifting
+              </li>
+              <li class="pricing-feat" role="listitem">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                <strong>Best value per clip</strong>
+              </li>
+            </ul>
+            <a href="#contact" class="btn btn-outline" style="border-color:var(--border);color:var(--text);width:100%;justify-content:center;">Order Bulk Pack</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         INVESTOR SECTION
+    ============================================================ -->
+    <section id="investor" class="section" aria-labelledby="investor-title">
+      <div class="container text-center">
+        <span class="section-label reveal">For Investors</span>
+        <h2 class="section-title reveal" id="investor-title">Why Investors Love Sock Locks</h2>
+        <p class="section-sub reveal" style="color:rgba(255,255,255,.7);">A massive addressable market, high margins, and a product that sells itself. Here's why the numbers make sense.</p>
+
+        <div class="investor-grid">
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="investor-card-title">Ultra-Low Production Cost</div>
+            <div class="investor-card-desc">Each Sock Lock costs just 10–15 cents to manufacture at scale via injection moulding.</div>
+            <div class="investor-card-highlight">10–15¢ per unit</div>
+          </div>
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="investor-card-title">High Profit Margins</div>
+            <div class="investor-card-desc">Retail pricing of $0.30–$0.75 per unit delivers gross margins well above 70% — superior to almost any physical goods category.</div>
+            <div class="investor-card-highlight">70%+ Gross Margin</div>
+          </div>
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="investor-card-title">Massive Global Market</div>
+            <div class="investor-card-desc">Every household on earth does laundry. The global sock market alone exceeds $40 billion annually, with strong repurchase behaviour.</div>
+            <div class="investor-card-highlight">$40B+ Market</div>
+          </div>
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="investor-card-title">Scalable Manufacturing</div>
+            <div class="investor-card-desc">Injection moulding enables rapid volume scaling with minimal additional labour. Production can be ramped up in weeks, not months.</div>
+            <div class="investor-card-highlight">Injection Moulded</div>
+          </div>
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="investor-card-title">Low Labour Overhead</div>
+            <div class="investor-card-desc">The manufacturing process is highly automated, keeping labour costs minimal and allowing the business to scale without proportional headcount growth.</div>
+            <div class="investor-card-highlight">Highly Automated</div>
+          </div>
+          <div class="investor-card reveal">
+            <div class="investor-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </div>
+            <div class="investor-card-title">Multiple Revenue Channels</div>
+            <div class="investor-card-desc">Direct-to-consumer e-commerce, retail partnerships, subscription bundles, and white-label licensing all present strong, diversified revenue opportunities.</div>
+            <div class="investor-card-highlight">Omnichannel Ready</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TESTIMONIALS SECTION
+    ============================================================ -->
+    <section id="testimonials" class="section section-alt" aria-labelledby="testimonials-title">
+      <div class="container text-center">
+        <span class="section-label reveal">Testimonials</span>
+        <h2 class="section-title reveal" id="testimonials-title">What Our Customers Are Saying</h2>
+        <p class="section-sub reveal">Thousands of households have already made the switch. Here's what they think.</p>
+
+        <div class="testimonials-grid">
+          <div class="testimonial-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p class="testimonial-text">"I was sceptical at first — it seems like such a simple thing. But after one week of using Sock Locks, I genuinely cannot imagine going back. No more mismatched pairs, no more digging through the drawer. It's one of those products that just works."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);" aria-hidden="true">SL</div>
+              <div>
+                <div class="author-name">Sarah L.</div>
+                <div class="author-role">Mother of three, Melbourne</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p class="testimonial-text">"As someone who takes 20 minutes to pair socks on laundry day, this product genuinely changed my routine. The clips survived 50+ wash cycles without any issues. My only regret is not discovering them sooner."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#0ea5e9,#06b6d4);" aria-hidden="true">MT</div>
+              <div>
+                <div class="author-name">Marcus T.</div>
+                <div class="author-role">Software Engineer, Sydney</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card reveal">
+            <div class="stars" aria-label="5 out of 5 stars">
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <p class="testimonial-text">"I bought the bulk pack for our family of six and it was the best $50 I've spent this year. Even my kids can figure out how to clip them on. Folding laundry has gone from a chore I dread to something that takes half the time."</p>
+            <div class="testimonial-author">
+              <div class="author-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444);" aria-hidden="true">JR</div>
+              <div>
+                <div class="author-name">Jennifer R.</div>
+                <div class="author-role">Homemaker, Brisbane</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FAQ SECTION
+    ============================================================ -->
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container text-center">
+        <span class="section-label reveal">FAQ</span>
+        <h2 class="section-title reveal" id="faq-title">Frequently Asked Questions</h2>
+        <p class="section-sub reveal">Everything you need to know before you order.</p>
+
+        <div class="faq-list" role="list">
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              How durable are Sock Locks?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Sock Locks are engineered for long-term use. Made from premium TPU, each clip is designed to withstand over 1,000 wash-and-dry cycles without cracking, weakening, or losing its grip. Under normal household use, a pack should last several years.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              Are they dryer safe?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Yes — Sock Locks are fully dryer safe at standard and high heat settings up to 80°C. The TPU material is specifically chosen for its heat resistance and flexibility, meaning it won't warp, melt, or damage your dryer drum during normal cycles.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              What material are they made from?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Sock Locks are manufactured from Thermoplastic Polyurethane (TPU) — the same material used in high-performance phone cases, protective equipment, and medical devices. It's flexible, durable, non-toxic, and resistant to both heat and mechanical stress.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              Can they be reused?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Absolutely. Reusability is the core design principle of Sock Locks. Unlike disposable alternatives, each clip can be clipped and unclipped thousands of times. There's no planned obsolescence here — one pack should genuinely last years with daily use.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              Will they damage my socks?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">No. Sock Locks are specifically designed with rounded, smooth edges and a spring-grip mechanism that holds fabric securely without piercing, snagging, or stretching it. They work by threading the fabric through a loop rather than using pins or sharp teeth.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              What sock sizes and thicknesses do they support?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Sock Locks work with virtually all sock types — ankle socks, knee-highs, sport socks, thin dress socks, and thick woolly winter socks. The flexible TPU material accommodates varying fabric thicknesses without difficulty.</div>
+            </div>
+          </div>
+
+          <div class="faq-item reveal" role="listitem">
+            <button class="faq-question" aria-expanded="false">
+              How long does shipping take?
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="faq-answer" role="region">
+              <div class="faq-answer-inner">Standard shipping takes 5–7 business days within Australia. Express shipping (2–3 business days) is available at checkout. International orders typically arrive within 10–14 business days. All orders above $30 include free standard shipping.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CONTACT SECTION
+    ============================================================ -->
+    <section id="contact" class="section section-alt" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="text-center">
+          <span class="section-label reveal">Contact Us</span>
+          <h2 class="section-title reveal" id="contact-title">Get in Touch</h2>
+          <p class="section-sub reveal">Questions? Partnership enquiries? Investor meetings? We'd love to hear from you.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="reveal">
+            <h3 class="contact-info-title">Let's Talk</h3>
+            <p class="contact-info-desc">Whether you're a customer with a question, a retailer interested in stocking Sock Locks, or an investor wanting to learn more — our team responds within one business day.</p>
+            <div class="contact-detail">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              hello@socklocks.com.au
+            </div>
+            <div class="contact-detail">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6.13 6.13l1.02-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +61 2 9000 0000
+            </div>
+            <div class="contact-detail">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Perth, Western Australia
+            </div>
+          </div>
+
+          <div class="reveal">
+            <form id="contact-form" novalidate aria-label="Contact form">
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Jane Smith" autocomplete="name" required />
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="jane@example.com" autocomplete="email" required />
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Tell us how we can help..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-blue">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send Message
+              </button>
+            </form>
+            <div class="form-success" id="form-success" role="alert" aria-live="polite">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Message sent! We'll be in touch within one business day.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name">Sock<span>Locks</span></div>
+          <p class="footer-desc">Small clips. Big impact. We're on a mission to solve one of life's most universally relatable household frustrations — one sock pair at a time.</p>
+          <div class="footer-socials" aria-label="Social media links">
+            <!-- Facebook -->
+            <a href="#" class="social-link" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <!-- Instagram -->
+            <a href="#" class="social-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="rgba(255,255,255,.7)" stroke-width="2"/></svg>
+            </a>
+            <!-- Twitter/X -->
+            <a href="#" class="social-link" aria-label="Twitter">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            </a>
+            <!-- LinkedIn -->
+            <a href="#" class="social-link" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <nav class="footer-links" aria-label="Footer navigation">
+            <a href="#hero">Home</a>
+            <a href="#problem">The Problem</a>
+            <a href="#solution">Solution</a>
+            <a href="#how">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#investor">Investors</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </div>
+        <div>
+          <div class="footer-col-title">Contact</div>
+          <div class="footer-links">
+            <a href="mailto:hello@socklocks.com.au">hello@socklocks.com.au</a>
+            <a href="tel:+61290000000">+61 2 9000 0000</a>
+            <span style="color:rgba(255,255,255,.4);">Perth, WA, Australia</span>
+          </div>
+          <div style="margin-top:28px;">
+            <div class="footer-col-title">Legal</div>
+            <div class="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms &amp; Conditions</a>
+              <a href="#">Shipping Policy</a>
+              <a href="#">Returns &amp; Refunds</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 Sock Locks Pty Ltd. All rights reserved.</span>
+        <span>Made with care in Australia</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="back-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ---- Navbar scroll state ---- */
+    const navbar = document.getElementById('navbar');
+    const backTop = document.getElementById('back-top');
+
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY > 60;
+      navbar.classList.toggle('scrolled', scrolled);
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ---- Mobile hamburger menu ---- */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Close on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* ---- Scroll reveal ---- */
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          // Stagger siblings slightly
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal:not(.visible)'));
+          const idx = siblings.indexOf(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, Math.min(idx * 80, 320));
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    /* ---- Animated counters ---- */
+    function animateCounter(el) {
+      const target   = parseFloat(el.dataset.target);
+      const prefix   = el.dataset.prefix  || '';
+      const suffix   = el.dataset.suffix  || '';
+      const duration = 1800;
+      const start    = performance.now();
+
+      function update(now) {
+        const elapsed  = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased    = 1 - Math.pow(1 - progress, 3);
+        const value    = eased * target;
+
+        el.textContent = prefix + (Number.isInteger(target)
+          ? Math.round(value).toLocaleString()
+          : value.toFixed(1)) + suffix;
+
+        if (progress < 1) requestAnimationFrame(update);
+        else el.textContent = prefix + target.toLocaleString() + suffix;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number').forEach(el => counterObserver.observe(el));
+
+    /* ---- FAQ Accordion ---- */
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item    = btn.closest('.faq-item');
+        const answer  = item.querySelector('.faq-answer');
+        const isOpen  = item.classList.contains('open');
+
+        // Close all others
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+          if (openItem !== item) {
+            openItem.classList.remove('open');
+            openItem.querySelector('.faq-answer').style.maxHeight = '0';
+            openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // Toggle current
+        item.classList.toggle('open', !isOpen);
+        btn.setAttribute('aria-expanded', String(!isOpen));
+
+        if (!isOpen) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        } else {
+          answer.style.maxHeight = '0';
+        }
+      });
+    });
+
+    /* ---- Contact form (front-end only) ---- */
+    const contactForm = document.getElementById('contact-form');
+    const formSuccess = document.getElementById('form-success');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name    = contactForm.querySelector('#name').value.trim();
+      const email   = contactForm.querySelector('#email').value.trim();
+      const message = contactForm.querySelector('#message').value.trim();
+
+      // Basic validation
+      if (!name || !email || !message) {
+        const firstEmpty = contactForm.querySelector('input:invalid, textarea:invalid');
+        if (firstEmpty) firstEmpty.focus();
+        return;
+      }
+
+      // Simulate submission
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      setTimeout(() => {
+        contactForm.style.display = 'none';
+        formSuccess.classList.add('show');
+      }, 1000);
+    });
+
+    /* ---- Smooth scroll for all anchor links ---- */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          const navHeight = navbar.offsetHeight;
+          const top = target.getBoundingClientRect().top + window.scrollY - navHeight;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
